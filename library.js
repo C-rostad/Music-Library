@@ -115,10 +115,11 @@ const addTrackToPlaylist = function(trackId, playlistId, object) {
  if (!trackId || !playlistId || !object) {
        return null;
  }
- object["playlists"][playlistId]["tracks"].push(trackId); //add test and implementation for when trackId or playlistId dont exist
+ object["playlists"][playlistId]["tracks"].push(trackId); //add test and implementation for when trackId or playlistId dont exist in the object
 }
 
-addTrackToPlaylist("t03", "p01", library);
+//addTrackToPlaylist tests
+//addTrackToPlaylist("t03", "p01", library);
 
 
 // generates a unique id
@@ -129,10 +130,20 @@ const generateUid = function() {
 
 
 // adds a track to the library
-const addTrack = function(name, artist, album) {
-
+const addTrack = function(name, artist, album, object) {
+       let newId = generateUid();
+       console.log(`Adding:${name} by ${artist} (${album}) to track list under id: ${newId}`);
+       object["tracks"][newId] = {
+              "id": newId,
+              "name": name,
+              "artist": artist,
+              "album": album
+       }
 }
 
+
+//addTrack tests
+addTrack("Silvera", "Gojira", "Magma", library);
 
 // adds a playlist to the library
 const addPlaylist = function(name) {
