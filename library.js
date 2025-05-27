@@ -30,11 +30,29 @@ const library = {
 // prints a list of all playlists, in the form:
 // p01: Coding Music - 2 tracks
 // p02: Other Playlist - 1 tracks
-const printPlaylists = function() {
+const printPlaylists = function(object) {
+
+if (!object) { //if called without an object, return null
+       return null;
+}
+
+ const playlists =  object["playlists"]; //create playlists object
+ const playlistsKeys = Object.keys(playlists); //create playlists keys
+
+ for (const key of playlistsKeys) { //iterate through keys
+       let string = `${key}: `;  //create string for output
+       string = string.concat(playlists[key]["name"], " - "); //add name of playlist to string
+       const keyObject = Object.keys(playlists[key]);
+       string = string.concat(playlists[key]["tracks"].length, " tracks"); //add amount of tracks to string
+       console.log(string); //print string
+ }
+
+
 
 }
 
-
+printPlaylists(library);
+console.log(printPlaylists());
 // prints a list of all tracks, using the following format:
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
