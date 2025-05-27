@@ -131,7 +131,7 @@ const generateUid = function() {
 
 // adds a track to the library
 const addTrack = function(name, artist, album, object) {
-       let newId = generateUid();
+       const newId = `${generateUid()}`;
        console.log(`Adding:${name} by ${artist} (${album}) to track list under id: ${newId}`);
        object["tracks"][newId] = {
               "id": newId,
@@ -143,13 +143,26 @@ const addTrack = function(name, artist, album, object) {
 
 
 //addTrack tests
-addTrack("Silvera", "Gojira", "Magma", library);
+//addTrack("Silvera", "Gojira", "Magma", library);
 
 // adds a playlist to the library
-const addPlaylist = function(name) {
+const addPlaylist = function(name, object) {
+       const newId = `${generateUid()}`;
+       console.log(`Adding Playlist: ${name} under id: ${newId}`);
+       object["playlists"][newId] = {
+              "id": newId,
+              "name": name,
+              "tracks": []
+       }
+       console.log(object["playlists"]);
+
+
+
 
 }
 
+//addPlaylist tests
+addPlaylist("New Playlist", library);
 
 // STRETCH:
 // given a query string string, prints a list of tracks
