@@ -54,11 +54,13 @@ const printPlaylists = function(object) {
 
 }
 
-//printPlaylists tests
-//printPlaylists(library);
-//console.log(printPlaylists());
-
-
+const assertEqual = function(actual, expected) {
+  if (actual === expected) {
+    console.log(`Assertion Passed: ${actual} === ${expected}`);
+  } else {
+    console.log(`Assertion Failed: ${actual} !== ${expected}`);
+  }
+};
 
 // prints a list of all tracks, using the following format:
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
@@ -76,15 +78,13 @@ const printTracks = function(object) {
        }
 
 }
-//printTracks tests
-//printTracks(library);
-
 
 // prints a list of tracks for a given playlist, using the following format:
 // p01: Coding Music - 2 tracks
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
 const printPlaylist = function(playlistId, object) {
+
  if (!playlistId || !object) {
        return null;
  }
@@ -106,8 +106,7 @@ const printPlaylist = function(playlistId, object) {
 
 }
 
-//tests for printPlaylist
-//printPlaylist("p01", library);
+
 
 
 // adds an existing track to an existing playlist
@@ -118,8 +117,7 @@ const addTrackToPlaylist = function(trackId, playlistId, object) {
  object["playlists"][playlistId]["tracks"].push(trackId); //add test and implementation for when trackId or playlistId dont exist in the object
 }
 
-//addTrackToPlaylist tests
-//addTrackToPlaylist("t03", "p01", library);
+
 
 
 // generates a unique id
@@ -147,6 +145,9 @@ const addTrack = function(name, artist, album, object) {
 
 // adds a playlist to the library
 const addPlaylist = function(name, object) {
+       if (!name || !object) {
+              return null;
+       }
        const newId = `${generateUid()}`;
        console.log(`Adding Playlist: ${name} under id: ${newId}`);
        object["playlists"][newId] = {
@@ -161,14 +162,74 @@ const addPlaylist = function(name, object) {
 
 }
 
-//addPlaylist tests
-addPlaylist("New Playlist", library);
+
 
 // STRETCH:
 // given a query string string, prints a list of tracks
 // where the name, artist or album contains the query string (case insensitive)
 // tip: use "string".search("tri") 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
-const printSearchResults = function(query) {
+const printSearchResults = function(query, object) {
+       if (!query || !object) {
+              return null
+       }
+       const trackKeys = Object.keys(object["tracks"]);
+       for (key of trackKeys) {
+              if (object["tracks"][key]["artist"].search(query) !== -1 ||
+                  object["tracks"][key]["name"].search(query) !== -1 ||
+                  object["tracks"][key]["album"].search(query) !== -1) {
+                     console.log(`${object["tracks"][key]["id"]} contains ${query} - ${object["tracks"][key]["name"]} by ${object["tracks"][key]["artist"]} (${object["tracks"][key]["album"]})`);
+  
+              }
+       }
 
 }
+
+
+
+//printPlaylists tests
+console.log("printPlaylists tests:");
+printPlaylists(library); 
+//output: 
+// p01: Coding Music - 2 tracks
+// p02: Other Playlist - 1 tracks
+assertEqual(printPlaylists(), null); //true
+
+
+//printTracks tests
+console.log("printTracks tests: \n");
+printTracks(library);
+assertEqual(printTracks(), null);
+
+console.log();
+
+//tests for printPlaylist
+console.log("printPlaylist tests: \n");
+printPlaylist("p01", library);
+assertEqual(printPlaylist(library), null);
+assertEqual(printPlaylist("p01"), null);
+assertEqual(printPlaylists(), null);
+console.log();
+
+//addTrackToPlaylist tests
+console.log("addTrackToPlaylist tests: \n")
+addTrackToPlaylist("t03", "p01", library);
+assertEqual(addTrackToPlaylist(), null);
+console.log(library["playlists"]["p01"]);
+assertEqual(addTrackToPlaylist(library), null);
+console.log();
+
+//addPlaylist tests
+console.log("addPlaylist tests: \n");
+addPlaylist("New Playlist", library);
+assertEqual(addPlaylist(), null);
+assertEqual(addPlaylist(library), null);
+console.log();
+
+
+//printSearchResults tests
+
+console.log("printSearchResults tests: \n")
+printSearchResults("John", library);
+printSearchResults("C", library);
+assertEqual(printSearchResults(), null);
