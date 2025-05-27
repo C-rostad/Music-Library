@@ -23,77 +23,60 @@ const library = {
                       name: "Other Playlist",
                       tracks: ["t03"]
                     }
-             }
-};
-
-/////////////////////////////
-// FUNCTIONS TO IMPLEMENT:
-/////////////////////////////
+             },
 
 // prints a list of all playlists, in the form:
 // p01: Coding Music - 2 tracks
 // p02: Other Playlist - 1 tracks
-const printPlaylists = function(object) {
-
-       if (!object) { //if called without an object, return null
-              return null;
-       }
-
- const playlists =  object["playlists"]; //create playlists object
+ printPlaylists: function() {
+ const playlists =  this["playlists"]; //create playlists object
  const playlistsKeys = Object.keys(playlists); //create playlists keys
-
  for (const key of playlistsKeys) { //iterate through keys
        let string = `${key}: `;  //create string for output
        string = string.concat(playlists[key]["name"], " - "); //add name of playlist to string
        const keyObject = Object.keys(playlists[key]);
        string = string.concat(playlists[key]["tracks"].length, " tracks"); //add amount of tracks to string
        console.log(string); //print string
- }
+       }
 
 
 
-}
-
-const assertEqual = function(actual, expected) {
-  if (actual === expected) {
-    console.log(`Assertion Passed: ${actual} === ${expected}`);
-  } else {
-    console.log(`Assertion Failed: ${actual} !== ${expected}`);
-  }
-};
+}, // printPlaylists end
 
 // prints a list of all tracks, using the following format:
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
 // t03: Four Thirty-Three by John Cage (Woodstock 1952)
-const printTracks = function(object) {
-       if (!object) {
-              return null;
-       }
-       const tracks = object["tracks"];
+ printTracks: function() {
+       const tracks = this["tracks"];
        const tracksKeys = Object.keys(tracks);
        for (const key of tracksKeys) {
               const string = `${key}: ${tracks[key]["name"]} by ${tracks[key]["artist"]} (${tracks[key]["album"]})`;
               console.log(string);
        }
 
-}
+}, //printTracks end
 
 // prints a list of tracks for a given playlist, using the following format:
 // p01: Coding Music - 2 tracks
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
-const printPlaylist = function(playlistId, object) {
+printPlaylist: function(playlistId) {
 
- if (!playlistId || !object) {
+ if (!playlistId) { //check if playlistId was input
        return null;
  }
- const playlists = object["playlists"];
+
+ const playlists = this["playlists"];
  const playlistsKeys = Object.keys(playlists);
+ if (!playlistsKeys.includes(playlistId)) { //check if the playlistId is in the library
+       return null;
+ }
+
  let playlistString = `${playlistId}: ${playlists[playlistId]["name"]} - ${playlists[playlistId]["tracks"].length} tracks`
  console.log(playlistString);
 
- const tracks = object["tracks"];
+ const tracks = this["tracks"];
  const trackId = playlists[playlistId]["tracks"];
  for (key of trackId) {
        let trackString = `${key}: `;
@@ -104,22 +87,88 @@ const printPlaylist = function(playlistId, object) {
 
 
 
-}
-
-
-
+}, //printPlaylist end
 
 // adds an existing track to an existing playlist
-const addTrackToPlaylist = function(trackId, playlistId, object) {
- if (!trackId || !playlistId || !object) {
+addTrackToPlaylist: function(trackId, playlistId) {
+ if (!trackId || !playlistId) { //make sure all values are input
        return null;
  }
- object["playlists"][playlistId]["tracks"].push(trackId); //add test and implementation for when trackId or playlistId dont exist in the object
+ const trackKeys = Object.keys(this["tracks"]);
+if (!trackKeys.includes(trackId)) { //check if trackId exists
+       return null;
 }
+ const playlistKeys = Object.keys(this["playlists"]);
+ if (!playlistKeys.includes(playlistId)) { // check if playlistId exists
+       return null;
+ }
+
+ this["playlists"][playlistId]["tracks"].push(trackId); //add track
+}, //addTrackToPlaylist end
+
+// adds a track to the library
+addTrack: function(name, artist, album) {
+       if (!name || !artist || !album) { //checks inputs are valid
+              return null;
+       }
+       const newId = `${generateUid()}`; //create id
+       console.log(`Adding:${name} by ${artist} (${album}) to track list under id: ${newId}`); 
+       this["tracks"][newId] = { //add to library under newId
+              "id": newId,
+              "name": name,
+              "artist": artist,
+              "album": album
+       }
+}, //addTrack end
+
+// adds a playlist to the library
+ addPlaylist: function(name) {
+       if (!name) { //checks input exists
+              return null;
+       }
+       const newId = `${generateUid()}`; //generate id
+       console.log(`Adding Playlist: ${name} under id: ${newId}`);
+       this["playlists"][newId] = { //add playlist to library under newId
+              "id": newId,
+              "name": name,
+              "tracks": []
+       }
+}, //addPlaylist end
+
+// STRETCH:
+// given a query string string, prints a list of tracks
+// where the name, artist or album contains the query string (case insensitive)
+// tip: use "string".search("tri") 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
+ printSearchResults: function(query) {
+       if (!query) { //check input
+              return null
+       }
+       const trackKeys = Object.keys(this["tracks"]); 
+       for (key of trackKeys) { //iterate through keys
+              if (this["tracks"][key]["artist"].search(query) !== -1 || //check if query is in artist
+                  this["tracks"][key]["name"].search(query) !== -1 || //check if query is in name
+                  this["tracks"][key]["album"].search(query) !== -1) { //check if query is in album
+                     console.log(`${this["tracks"][key]["id"]} contains ${query} - ${this["tracks"][key]["name"]} by ${this["tracks"][key]["artist"]} (${this["tracks"][key]["album"]})`); //outputs where query was found
+  
+              }
+       }
+
+} //printSearchResults end
 
 
 
 
+             
+}; //library end
+
+const assertEqual = function(actual, expected) {
+  if (actual === expected) {
+    console.log(`Assertion Passed: ${actual} === ${expected}`);
+  } else {
+    console.log(`Assertion Failed: ${actual} !== ${expected}`);
+  }
+};
 // generates a unique id
 // (already implemented: use this for addTrack and addPlaylist)
 const generateUid = function() {
@@ -127,109 +176,68 @@ const generateUid = function() {
 }
 
 
-// adds a track to the library
-const addTrack = function(name, artist, album, object) {
-       const newId = `${generateUid()}`;
-       console.log(`Adding:${name} by ${artist} (${album}) to track list under id: ${newId}`);
-       object["tracks"][newId] = {
-              "id": newId,
-              "name": name,
-              "artist": artist,
-              "album": album
-       }
-}
-
-
-//addTrack tests
-//addTrack("Silvera", "Gojira", "Magma", library);
-
-// adds a playlist to the library
-const addPlaylist = function(name, object) {
-       if (!name || !object) {
-              return null;
-       }
-       const newId = `${generateUid()}`;
-       console.log(`Adding Playlist: ${name} under id: ${newId}`);
-       object["playlists"][newId] = {
-              "id": newId,
-              "name": name,
-              "tracks": []
-       }
-       console.log(object["playlists"]);
 
 
 
 
-}
 
 
-
-// STRETCH:
-// given a query string string, prints a list of tracks
-// where the name, artist or album contains the query string (case insensitive)
-// tip: use "string".search("tri") 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search
-const printSearchResults = function(query, object) {
-       if (!query || !object) {
-              return null
-       }
-       const trackKeys = Object.keys(object["tracks"]);
-       for (key of trackKeys) {
-              if (object["tracks"][key]["artist"].search(query) !== -1 ||
-                  object["tracks"][key]["name"].search(query) !== -1 ||
-                  object["tracks"][key]["album"].search(query) !== -1) {
-                     console.log(`${object["tracks"][key]["id"]} contains ${query} - ${object["tracks"][key]["name"]} by ${object["tracks"][key]["artist"]} (${object["tracks"][key]["album"]})`);
-  
-              }
-       }
-
-}
 
 
 
 //printPlaylists tests
 console.log("printPlaylists tests:");
-printPlaylists(library); 
+library.printPlaylists(); 
 //output: 
 // p01: Coding Music - 2 tracks
 // p02: Other Playlist - 1 tracks
-assertEqual(printPlaylists(), null); //true
-
+//assertEqual(printPlaylists(), null); //true old test
+console.log();
 
 //printTracks tests
 console.log("printTracks tests: \n");
-printTracks(library);
-assertEqual(printTracks(), null);
+library.printTracks();
+//assertEqual(printTracks(), null); old test
 
 console.log();
 
-//tests for printPlaylist
-console.log("printPlaylist tests: \n");
-printPlaylist("p01", library);
-assertEqual(printPlaylist(library), null);
-assertEqual(printPlaylist("p01"), null);
-assertEqual(printPlaylists(), null);
+
+//printPlaylist tests
+
+console.log("printPlaylist tests \n");
+library.printPlaylist("p01");
 console.log();
+
+//addTrack tests
+
+console.log("addTrack tests: \n");
+console.log(library.tracks);
+library.addTrack("Silvera", "Gojira", "Magma");
+console.log(library.tracks);
+assertEqual(library.addTrack(), null);
+console.log();
+
 
 //addTrackToPlaylist tests
 console.log("addTrackToPlaylist tests: \n")
-addTrackToPlaylist("t03", "p01", library);
-assertEqual(addTrackToPlaylist(), null);
+library.addTrackToPlaylist("t03", "p01");
+assertEqual(library.addTrackToPlaylist(), null); //check when no parameters included
 console.log(library["playlists"]["p01"]);
-assertEqual(addTrackToPlaylist(library), null);
+assertEqual(library.addTrackToPlaylist("t03"), null); //check when not all parameters included
+assertEqual(library.addTrackToPlaylist("t03", "P04"), null); //check for playlist that doesnt exist
+assertEqual(library.addTrackToPlaylist("t09", 'p01'), null) //check for track that doesnt exist
 console.log();
 
 //addPlaylist tests
 console.log("addPlaylist tests: \n");
-addPlaylist("New Playlist", library);
-assertEqual(addPlaylist(), null);
-assertEqual(addPlaylist(library), null);
+library.addPlaylist("New Playlist");
+assertEqual(library.addPlaylist(), null);
 console.log();
 
 
 //printSearchResults tests
 
 console.log("printSearchResults tests: \n")
-printSearchResults("John", library);
-printSearchResults("C", library);
-assertEqual(printSearchResults(), null);
+library.printSearchResults("John");
+library.printSearchResults("C");
+assertEqual(library.printSearchResults(), null);
