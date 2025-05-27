@@ -1,10 +1,13 @@
 const library = {
-  tracks: { t01: { id: "t01",
-                   name: "Code Monkey",
-                   artist: "Jonathan Coulton",
-                   album: "Thing a Week Three" },
-            t02: { id: "t02",
-                   name: "Model View Controller",
+  tracks: {
+
+    t01: { id: "t01",
+    name: "Code Monkey",
+    artist: "Jonathan Coulton",
+    album: "Thing a Week Three" },
+    t02: { id: "t02",
+
+       name: "Model View Controller",
                    artist: "James Dempsey",
                    album: "WWDC 2003"},
             t03: { id: "t03",
@@ -94,7 +97,7 @@ const printPlaylist = function(playlistId, object) {
  const trackId = playlists[playlistId]["tracks"];
  for (key of trackId) {
        let trackString = `${key}: `;
-       trackString = trackString.concat(tracks[key]["name"], " by ", tracks[key]["artist"], " (", tracks[key]["album"], ")");
+       trackString = trackString.concat(tracks[key]["name"], " by ", tracks[key]["artist"], " (", tracks[key]["album"], ")"); //refactor later
        console.log(trackString);
  }
 
@@ -103,13 +106,19 @@ const printPlaylist = function(playlistId, object) {
 
 }
 
-printPlaylist("p01", library);
+//tests for printPlaylist
+//printPlaylist("p01", library);
 
 
 // adds an existing track to an existing playlist
-const addTrackToPlaylist = function(trackId, playlistId) {
-
+const addTrackToPlaylist = function(trackId, playlistId, object) {
+ if (!trackId || !playlistId || !object) {
+       return null;
+ }
+ object["playlists"][playlistId]["tracks"].push(trackId); //add test and implementation for when trackId or playlistId dont exist
 }
+
+addTrackToPlaylist("t03", "p01", library);
 
 
 // generates a unique id
