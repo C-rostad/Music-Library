@@ -32,9 +32,9 @@ const library = {
 // p02: Other Playlist - 1 tracks
 const printPlaylists = function(object) {
 
-if (!object) { //if called without an object, return null
-       return null;
-}
+       if (!object) { //if called without an object, return null
+              return null;
+       }
 
  const playlists =  object["playlists"]; //create playlists object
  const playlistsKeys = Object.keys(playlists); //create playlists keys
@@ -51,15 +51,30 @@ if (!object) { //if called without an object, return null
 
 }
 
-printPlaylists(library);
-console.log(printPlaylists());
+//printPlaylists tests
+//printPlaylists(library);
+//console.log(printPlaylists());
+
+
+
 // prints a list of all tracks, using the following format:
 // t01: Code Monkey by Jonathan Coulton (Thing a Week Three)
 // t02: Model View Controller by James Dempsey (WWDC 2003)
 // t03: Four Thirty-Three by John Cage (Woodstock 1952)
-const printTracks = function() {
+const printTracks = function(object) {
+       if (!object) {
+              return null;
+       }
+       const tracks = object["tracks"];
+       const tracksKeys = Object.keys(tracks);
+       for (const key of tracksKeys) {
+              const string = `${key}: ${tracks[key]["name"]} by ${tracks[key]["artist"]} (${tracks[key]["album"]})`;
+              console.log(string);
+       }
 
 }
+//printTracks tests
+printTracks(library);
 
 
 // prints a list of tracks for a given playlist, using the following format:
